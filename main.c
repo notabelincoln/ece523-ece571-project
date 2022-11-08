@@ -5,6 +5,7 @@
  */
 
 #include <stdio.h>
+#include "fixed-point-5-11.h"
 
 int main(int argc, char **argv)
 {

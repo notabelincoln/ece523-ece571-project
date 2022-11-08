@@ -53,7 +53,7 @@ int16_t div_fixed_int(int16_t x, int x_int)
 	return x / x_int;
 }
 
-/* calculate taylor series for sin(x) up to 7th power */
+/* calculate taylor series for sin(x) up to nth term */
 int16_t sin_fixed_taylor(int16_t x)
 {
 	int i;
