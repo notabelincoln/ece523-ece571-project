@@ -5,6 +5,10 @@
  */
 #include "fixed-point-5-11.h"
 
+#ifndef SIN_FIXED_N
+#define SIN_FIXED_N 4 // number of terms to compute for sin(x)
+#endif
+
 /* convert double precision floating point value to fixed-point value */
 int16_t double_to_fixed(double x)
 {
@@ -52,14 +56,14 @@ int16_t div_fixed_int(int16_t x, int x_int)
 /* calculate taylor series for sin(x) up to 7th power */
 int16_t sin_fixed_taylor(int16_t x)
 {
-	int16_t i;
+	int i;
 	int16_t tmp;
 	int16_t sum;
 
 	tmp = x;
 	sum = x;
 	
-	for (i = 1; i < 4; i++) {
+	for (i = 1; i < SIN_FIXED_N; i++) {
 		tmp = mul_fixed(x, tmp);
 		tmp = div_fixed_int(tmp, -2 * i);
 		tmp = mul_fixed(tmp, x);
@@ -149,7 +153,7 @@ int16_t acos_fixed(int16_t x)
 	else if (x == 2048)
 		return 0;
 
-	int ret;
+	int16_t ret;
 
 	ret = sub_fixed(FXPT0511_HALF_PI, asin_fixed(x));
 
