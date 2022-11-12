@@ -4,4 +4,4 @@ CFLAGS += -Wall
 LFLAGS := -lm
 OUTPUT := run-test
 all:
-	$(CC) $(LFLAGS) -o $(OUTPUT) $(CFLAGS) $(SRC)
+	$(CC) -o $(OUTPUT) $(CFLAGS) $(SRC) $(LFLAGS)
