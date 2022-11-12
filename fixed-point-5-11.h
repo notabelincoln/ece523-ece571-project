@@ -34,7 +34,7 @@ int16_t div_fixed(int16_t x1, int16_t x2);
 int16_t div_fixed_int(int16_t x, int x_int);
 
 /* calculate taylor series for sin(x) up to 7th power */
-int16_t sin_fixed_taylor(int16_t x);
+//int16_t sin_fixed_taylor(int16_t x);
 
 /* calculated approximate value for sin(x) */
 int16_t sin_fixed(int16_t x);
