@@ -4,6 +4,10 @@
  * abe-math.c
  */
 
+#ifndef SIN_TAYLOR_N
+#define SIN_TAYLOR_N 4
+#endif;
+
 /* integrate an array of long integers using rectangles */
 long int a_int_rect(long int *x, long int *y, unsigned long int length)
 {
@@ -102,3 +106,22 @@ double a_lfint_trap(double *x, double *y, unsigned long int length)
 
 	return ret;
 }
+
+/* approximate a sin value using taylor series */
+double sin_taylor(double x)
+{
+	int i;
+	double ret;
+	double tmp;
+
+	ret = x;
+	tmp = x;
+
+	for (i = 1; i < SIN_TAYLOR_N; i++) {
+		tmp = tmp * x * x / (-2.0 * i * (2 * i + 1));
+		ret += tmp;
+	}
+
+	return ret;
+}
+
