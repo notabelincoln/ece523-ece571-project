@@ -1,5 +1,5 @@
 CC := gcc
-SRC := main.c fixed-point-5-11.c
+SRC := main.c fixed-point-5-11.c abe-math.c
 CFLAGS += -Wall
 LFLAGS := -lm
 OUTPUT := run-test
