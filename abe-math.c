@@ -6,7 +6,7 @@
 
 #ifndef SIN_TAYLOR_N
 #define SIN_TAYLOR_N 4
-#endif;
+#endif
 
 /* integrate an array of long integers using rectangles */
 long int a_int_rect(long int *x, long int *y, unsigned long int length)
