@@ -13,34 +13,16 @@
 /**********************
  * INTEGER ARITHMETIC *
  **********************/
-/* integrate an array of long integers using rectangles */
-long int a_int_rect(long int *x, long int *y, unsigned long int length)
+/* compute rectangle size */
+long int a_rect(long int delta_x, long int y)
 {
-	unsigned long int i;
-	long int ret;
-
-	if (length == 0)
-		return 0;
-
-	for (i = 1; i < length; i++)
-		ret += (x[i] - x[i - 1]) * y[i - 1];
-
-	return ret;
+	return delta_x * y;
 }
 
-/* integrate an array of long integers using trapezoids */
-long int a_int_trap(long int *x, long int *y, unsigned long int length)
+/* compute trapezoide size */
+long int a_trap(long int delta_x, long int y1, long int y2)
 {
-	unsigned long int i;
-	long int ret;
-
-	if (length == 0)
-		return 0;
-
-	for (i = 1; i < length; i++)
-		ret += (x[i] - x[i - 1]) * (y[i] + y[i - 1]) / 2;
-
-	return ret;
+	return (delta_x * ((y1 / 2) + (y2 / 2)));
 }
 
 /**********************************************
