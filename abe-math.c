@@ -10,6 +10,9 @@
 
 #include <math.h>
 
+/**********************
+ * INTEGER ARITHMETIC *
+ **********************/
 /* integrate an array of long integers using rectangles */
 long int a_int_rect(long int *x, long int *y, unsigned long int length)
 {
@@ -40,6 +43,9 @@ long int a_int_trap(long int *x, long int *y, unsigned long int length)
 	return ret;
 }
 
+/**********************************************
+ * SINGLE PRECISION FLOATING POINT ARITHMETIC *
+ **********************************************/
 /* integrate an array of floats using rectangles */
 float a_fint_rect(float *x, float *y, unsigned long int length)
 {
@@ -74,6 +80,32 @@ float a_fint_trap(float *x, float *y, unsigned long int length)
 	return ret;
 }
 
+/* approximate a sin value using taylor series */
+float a_fsin_taylor(float x)
+{
+	if (x > M_PI / 2)
+		return -1 * a_fsin_taylor(x - (M_PI));
+	else if (x < M_PI / -2)
+		return a_fsin_taylor(x + 2 * M_PI);
+	int i;
+	float ret;
+	float tmp;
+
+	ret = x;
+	tmp = x;
+
+	for (i = 1; i < SIN_TAYLOR_N; i++) {
+		tmp = tmp * x * x / (-2.0 * i * (2 * i + 1));
+		ret += tmp;
+	}
+
+	return ret;
+}
+
+
+/**********************************************
+ * DOUBLE PRECISION FLOATING POINT ARITHMETIC *
+ **********************************************/
 /* integrate an array of doubles using rectangles */
 double a_lfint_rect(double *x, double *y, unsigned long int length)
 {
@@ -109,12 +141,12 @@ double a_lfint_trap(double *x, double *y, unsigned long int length)
 }
 
 /* approximate a sin value using taylor series */
-double sin_taylor(double x)
+double a_lfsin_taylor(double x)
 {
 	if (x > M_PI / 2)
-		return -1 * sin_taylor(x - (M_PI));
+		return -1 * a_lfsin_taylor(x - (M_PI));
 	else if (x < M_PI / -2)
-		return sin_taylor(x + 2 * M_PI);
+		return a_lfsin_taylor(x + 2 * M_PI);
 	int i;
 	double ret;
 	double tmp;
