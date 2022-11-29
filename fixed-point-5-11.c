@@ -10,55 +10,55 @@
 #endif
 
 /* convert double precision floating point value to fixed-point value */
-int16_t double_to_fixed(double x)
+fixed_pt double_to_fixed(double x)
 {
-	return (int16_t)(x * 2048);
+	return (fixed_pt)(x * (1 << 11));
 }
 
 /* add two fixed-point numbers */
-int16_t add_fixed(int16_t x1, int16_t x2)
+fixed_pt add_fixed(fixed_pt x1, fixed_pt x2)
 {
 	return (x1 + x2);
 }
 
 /* subtract fixed-point number x2 from fixed point-number x1 */
-int16_t sub_fixed(int16_t x1, int16_t x2)
+fixed_pt sub_fixed(fixed_pt x1, fixed_pt x2)
 {
 	return (x1 - x2);
 }
 
 /* multiply two-fixed point numbers together */
-int16_t mul_fixed(int16_t x1, int16_t x2)
+fixed_pt mul_fixed(fixed_pt x1, fixed_pt x2)
 {
-	int32_t tmp;
+	fixed_pt2 tmp;
 
-	tmp = (int32_t)x1 * (int32_t)x2;
+	tmp = (fixed_pt2)x1 * (fixed_pt2)x2;
 
-	return (int16_t)(tmp >> 11);
+	return (fixed_pt)(tmp >> 11);
 }
 
 /* divide fixed-point number x1 by fixed-point number x2 */
-int16_t div_fixed(int16_t x1, int16_t x2)
+fixed_pt div_fixed(fixed_pt x1, fixed_pt x2)
 {
-	int32_t tmp;
+	fixed_pt2 tmp;
 
-	tmp = ((int32_t)(x1) << 11) / (int32_t)(x2);
+	tmp = ((fixed_pt2)(x1) << 11) / (fixed_pt2)(x2);
 
-	return (int16_t)tmp;
+	return (fixed_pt)tmp;
 }
 
 /* divide fixed-point number by int */
-int16_t div_fixed_int(int16_t x, int x_int)
+fixed_pt div_fixed_int(fixed_pt x, int x_int)
 {
 	return x / x_int;
 }
 
 /* calculate taylor series for sin(x) up to nth term */
-int16_t sin_fixed_taylor(int16_t x)
+fixed_pt sin_fixed_taylor(fixed_pt x)
 {
 	int i;
-	int16_t tmp;
-	int16_t sum;
+	fixed_pt tmp;
+	fixed_pt sum;
 
 	tmp = x;
 	sum = x;
@@ -75,87 +75,18 @@ int16_t sin_fixed_taylor(int16_t x)
 }
 
 /* calculated approximate value for sin(x) */
-int16_t sin_fixed(int16_t x)
+fixed_pt sin_fixed(fixed_pt x)
 {
-	int16_t ret;
+	fixed_pt ret;
 
-	if (x < FXPT0511_MINUS_HALF_PI)
-		ret = sin_fixed(add_fixed(x, FXPT0511_2_PI));
-	else if (x > (3 * (FXPT0511_HALF_PI)))
-		ret = sin_fixed(sub_fixed(x, 2 * FXPT0511_PI));
-	else if (x > FXPT0511_HALF_PI)
-		ret = -1 * sin_fixed(sub_fixed(x, FXPT0511_PI));
+	if (x < FIXED_PT_MINUS_HALF_PI)
+		ret = sin_fixed(add_fixed(x, FIXED_PT_2_PI));
+	else if (x > (3 * (FIXED_PT_HALF_PI)))
+		ret = sin_fixed(sub_fixed(x, 2 * FIXED_PT_PI));
+	else if (x > FIXED_PT_HALF_PI)
+		ret = -1 * sin_fixed(sub_fixed(x, FIXED_PT_PI));
 	else
 		ret = sin_fixed_taylor(x);
-
-	return ret;
-}
-
-/* calculate approximate value for cos(x) */
-int16_t cos_fixed(int16_t x)
-{
-	return sin_fixed(add_fixed(x, FXPT0511_HALF_PI));
-}
-
-/* calculate approximate value for x ^ 1/2 using Newton-Raphson */
-int16_t sqrt_fixed(int16_t x)
-{
-	if (x <= 0)
-		return 0;
-
-	int i;
-	
-	int16_t ret;
-	int16_t tmp;
-
-	ret = x;
-
-	for (i = 0; i < 5; i++) {
-		tmp = div_fixed(x, ret);
-		ret = ret - sub_fixed(ret, tmp) / 2;
-	}
-
-	return ret;
-}
-
-/* calculate approximate value for arcsin(x) using Newton-Raphson */
-int16_t asin_fixed(int16_t x)
-{
-	if (x == -(1 << 11))
-		return FXPT0511_MINUS_HALF_PI;
-	else if (x == 0)
-		return 0;
-	else if (x == (1 << 11))
-		return FXPT0511_HALF_PI; 
-
-	int i;
-	
-	int16_t ret;
-	int16_t tmp;
-
-	ret = x;
-
-	for (i = 0; i < 5; i++) {
-		tmp = sin_fixed(ret) - x;
-		ret = ret - div_fixed(tmp, cos_fixed(ret));
-	}
-
-	return ret;
-}
-
-/* calculate approximate value for arccos(x) using Newton-Raphson */
-int16_t acos_fixed(int16_t x)
-{
-	if (x == -2048)
-		return FXPT0511_PI;
-	else if (x == 0)
-		return FXPT0511_HALF_PI; 
-	else if (x == 2048)
-		return 0;
-
-	int16_t ret;
-
-	ret = sub_fixed(FXPT0511_HALF_PI, asin_fixed(x));
 
 	return ret;
 }

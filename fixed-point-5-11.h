@@ -8,46 +8,37 @@
 
 #include <stdint.h>
 
-#define FXPT0511_PI ((int16_t)(0x1922))
-#define FXPT0511_MINUS_PI ((int16_t)(0xe6de))
-#define FXPT0511_2_PI ((int16_t)(0x3244))
-#define FXPT0511_MINUS_2_PI ((int16_t)(0xcdbc))
-#define FXPT0511_HALF_PI ((int16_t)(0x0c91))
-#define FXPT0511_MINUS_HALF_PI ((int16_t)(0xf36f))
+typedef int16_t fixed_pt;
+typedef int32_t fixed_pt2;
+
+#define FIXED_PT_PI ((fixed_pt)(0x1922))
+#define FIXED_PT_MINUS_PI ((fixed_pt)(0xe6de))
+#define FIXED_PT_2_PI ((fixed_pt)(0x3244))
+#define FIXED_PT_MINUS_2_PI ((fixed_pt)(0xcdbc))
+#define FIXED_PT_HALF_PI ((fixed_pt)(0x0c91))
+#define FIXED_PT_MINUS_HALF_PI ((fixed_pt)(0xf36f))
 
 /* convert double precision floating point value to fixed-point value */
-int16_t double_to_fixed(double x);
+fixed_pt double_to_fixed(double x);
 
 /* add two fixed-point numbers */
-int16_t add_fixed(int16_t x1, int16_t x2);
+fixed_pt add_fixed(fixed_pt x1, fixed_pt x2);
 
 /* subtract fixed-point number x2 from fixed point-number x1 */
-int16_t sub_fixed(int16_t x1, int16_t x2);
+fixed_pt sub_fixed(fixed_pt x1, fixed_pt x2);
 
 /* multiply two-fixed point numbers together */
-int16_t mul_fixed(int16_t x1, int16_t x2);
+fixed_pt mul_fixed(fixed_pt x1, fixed_pt x2);
 
 /* divide fixed-point number x1 by fixed-point number x2 */
-int16_t div_fixed(int16_t x1, int16_t x2);
+fixed_pt div_fixed(fixed_pt x1, fixed_pt x2);
 
 /* divide fixed-point number by int */
-int16_t div_fixed_int(int16_t x, int x_int);
+fixed_pt div_fixed_int(fixed_pt x, int x_int);
 
-/* calculate taylor series for sin(x) up to 7th power */
-//int16_t sin_fixed_taylor(int16_t x);
+/* calculate taylor series for sin(x) up to nth term */
+fixed_pt sin_fixed_taylor(fixed_pt x);
 
 /* calculated approximate value for sin(x) */
-int16_t sin_fixed(int16_t x);
-
-/* calculate approximate value for cos(x) */
-int16_t cos_fixed(int16_t x);
-
-/* calculate approximate value for x ^ 1/2 using Newton-Raphson */
-int16_t sqrt_fixed(int16_t x);
-
-/* calculate approximate value for arcsin(x) using Newton-Raphson */
-int16_t asin_fixed(int16_t x);
-
-/* calculate approximate value for arccos(x) using Newton-Raphson */
-int16_t acos_fixed(int16_t x);
+fixed_pt sin_fixed(fixed_pt x);
 #endif

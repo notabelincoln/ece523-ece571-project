@@ -25,9 +25,9 @@ double area_trap(double delta_x, double y1, double y2)
 double sin_taylor(double x)
 {
 	if (x > M_PI / 2)
-		return -1 * a_sin_taylor(x - (M_PI));
+		return -1 * sin_taylor(x - (M_PI));
 	else if (x < M_PI / -2)
-		return a_sin_taylor(x + 2 * M_PI);
+		return sin_taylor(x + 2 * M_PI);
 	int i;
 	double ret;
 	double tmp;
