@@ -17,6 +17,7 @@ int main(int argc, char **argv)
 	int display;
 
 	fixed_pt x;
+	const fixed_pt x_step = ((fixed_pt)1 << 12);
 
 	display = 0;
 
@@ -45,7 +46,7 @@ int main(int argc, char **argv)
 	if (display == 0) {
 		switch (function) {
 		case (0):
-			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_4_PI; x++)
+			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_4_PI; x += x_step)
 				sin_fixed(x);
 			break;
 		}
@@ -53,7 +54,7 @@ int main(int argc, char **argv)
 		switch (function) {
 		case (0):
 			printf("%36s,%36s\n","x","sin_taylor");
-			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_4_PI; x++)
+			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_4_PI; x += x_step)
 				printf("%36.32lf,%36.32lf\n",
 						(double)x / ((fixed_pt)1 << 32),
 						(double)sin_fixed(x)/ ((fixed_pt)1 << 32));
