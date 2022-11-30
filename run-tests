@@ -1,5 +1,12 @@
 #!/bin/bash
 # compute sin values
+RFOLDER="./results"
+
+if [ ! -d "$RFOLDER" ];
+then
+	mkdir -p $RFOLDER;
+fi
+
 for i in {1..5}; # compile up to 5 taylor series terms
 do
 	make CFLAGS=-DSIN_TAYLOR_N=$i >> /dev/null;
@@ -8,9 +15,9 @@ do
 	for j in test-*.bin;
 	do
 		OFILE_BASE="$(basename $j .bin)-sin-$i"
-		./$j sin display > results-"$OFILE_BASE".csv;
+		./$j sin display > "$RFOLDER"/results-"$OFILE_BASE".csv;
 
-		OFILE_PERF=perf-"$OFILE_BASE".txt
+		OFILE_PERF="$RFOLDER"/perf-"$OFILE_BASE".txt
 		
 		rm -f "$OFILE_PERF"
 
@@ -28,6 +35,6 @@ do
 			--append -e power/energy-pkg/ ./$j sin;
 
 			printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
-		done;
-	done;
+		done
+	done
 done
