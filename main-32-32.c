@@ -45,7 +45,6 @@ int main(int argc, char **argv)
 	if (display == 0) {
 		switch (function) {
 		case (0):
-			printf("Running\n");
 			for (x = -(2 * M_PI); x <= (2 * M_PI); x += 0.0000001)
 				sin_fixed(double_to_fixed(x));
 			break;
