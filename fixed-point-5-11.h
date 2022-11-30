@@ -17,6 +17,8 @@ typedef int32_t fixed_pt2;
 #define FIXED_PT_MINUS_2_PI ((fixed_pt)(0xcdbc))
 #define FIXED_PT_HALF_PI ((fixed_pt)(0x0c91))
 #define FIXED_PT_MINUS_HALF_PI ((fixed_pt)(0xf36f))
+#define FIXED_PT_4_PI ((fixed_pt)(0x6488))
+#define FIXED_PT_MINUS_4_PI ((fixed_pt)(0x9b78))
 
 /* convert double precision floating point value to fixed-point value */
 fixed_pt double_to_fixed(double x);
