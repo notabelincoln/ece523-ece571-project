@@ -2,5 +2,15 @@
 # compute sin values
 for i in {1..5}; # compile up to 5 taylor series terms
 do	make CFLAGS=-DSIN_TAYLOR_N=$i;
-	echo $i;
+
+	# gather the results for each test
+	for j in test-0*.bin;
+	do	./$j sin display > results-$(basename $j .bin)-sin-$i.csv;
+		
+		# benchmark the performance 10 times to filter out noise
+		for k in {1..10};
+		do	perf stat -o perf-$(basename $j .bin)-sin-$i.txt \
+			--append -e power/energy-pkg/,instructions:u,L1-icache-load-misses:u,L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
+		done;
+	done;
 done
