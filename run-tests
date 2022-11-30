@@ -1,16 +1,32 @@
 #!/bin/bash
 # compute sin values
 for i in {1..5}; # compile up to 5 taylor series terms
-do	make CFLAGS=-DSIN_TAYLOR_N=$i;
+do
+	make CFLAGS=-DSIN_TAYLOR_N=$i;
 
 	# gather the results for each test
 	for j in test-0*.bin;
-	do	./$j sin display > results-$(basename $j .bin)-sin-$i.csv;
+	do
+		OFILE_BASE="$(basename $j .bin)-sin-$i"
+		./$j sin display > results-"$OFILE_BASE".csv;
+
+		OFILE_PERF=perf-"$OFILE_BASE".txt
 		
+		rm -f "$OFILE_PERF"
+
 		# benchmark the performance 10 times to filter out noise
 		for k in {1..10};
-		do	perf stat -o perf-$(basename $j .bin)-sin-$i.txt \
-			--append -e power/energy-pkg/,instructions:u,L1-icache-load-misses:u,L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
+		do
+			printf "TEST $k\n"  >> "$OFILE_PERF"
+			
+			perf stat -o "$OFILE_PERF" \
+			--append -e instructions:u,L1-icache-load-misses:u \
+			-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
+
+			perf stat -o "$OFILE_PERF" \
+			--append -e power/energy-pkg/ ./$j sin;
+
+			printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
 		done;
 	done;
 done
