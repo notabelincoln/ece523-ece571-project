@@ -26,6 +26,8 @@ int main(int argc, char **argv)
 	printf("%5s %#06hx\n", "-2π", double_to_fxd_5_11(-2 * M_PI));
 	printf("%5s %#06hx\n", "π/2", double_to_fxd_5_11(M_PI / 2));
 	printf("%5s %#06hx\n", "-π/2", double_to_fxd_5_11(M_PI / -2));
+	printf("%5s %#06hx\n", "4π", double_to_fxd_5_11(4 * M_PI));
+	printf("%5s %#06hx\n", "-4π", double_to_fxd_5_11(-4 * M_PI));
 
 	printf("16.16:\n");
 	printf("%5s %#010x\n", "π", double_to_fxd_16_16(M_PI));
@@ -34,6 +36,8 @@ int main(int argc, char **argv)
 	printf("%5s %#010x\n", "-2π", double_to_fxd_16_16(-2 * M_PI));
 	printf("%5s %#010x\n", "π/2", double_to_fxd_16_16(M_PI / 2));
 	printf("%5s %#010x\n", "-π/2", double_to_fxd_16_16(M_PI / -2));
+	printf("%5s %#010x\n", "4π", double_to_fxd_16_16(4 * M_PI));
+	printf("%5s %#010x\n", "-4π", double_to_fxd_16_16(-4 * M_PI));
 	
 	printf("32.32:\n");
 	printf("%5s %#018lx\n", "π", double_to_fxd_32_32(M_PI));
@@ -42,6 +46,8 @@ int main(int argc, char **argv)
 	printf("%5s %#018lx\n", "-2π", double_to_fxd_32_32(-2 * M_PI));
 	printf("%5s %#018lx\n", "π/2", double_to_fxd_32_32(M_PI / 2));
 	printf("%5s %#018lx\n", "-π/2", double_to_fxd_32_32(M_PI / -2));
+	printf("%5s %#018lx\n", "4π", double_to_fxd_32_32(4 * M_PI));
+	printf("%5s %#018lx\n", "-4π", double_to_fxd_32_32(-4 * M_PI));
 	
 	return 0;
 }
