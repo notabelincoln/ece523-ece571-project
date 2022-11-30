@@ -9,7 +9,7 @@ float:
 	$(CC) -o $(OUTPUT)-float $(CFLAGS) main-float.c abe-math-float.c $(LFLAGS)
 
 double:
-	$(CC) -o $(OTUPUT)-double $(CFLAGS) main-double.c abe-math-double.c $(LFLAGS)
+	$(CC) -o $(OUTPUT)-double $(CFLAGS) main-double.c abe-math-double.c $(LFLAGS)
 
 fx5pt11:
 	$(CC) -o $(OUTPUT)-5-11 $(CFLAGS) main-5-11.c fixed-point-5-11.c $(LFLAGS)
