@@ -91,3 +91,25 @@ fixed_pt sin_fixed(fixed_pt x)
 	return ret;
 }
 
+/* compute the value of a polynomial (lowest degree coefficient first) evaluated at x */
+fixed_pt poly_fixed(const fixed_pt *coefs, int power, fixed_pt x)
+{
+	int i;
+	int j;
+	
+	fixed_pt tmp;
+	fixed_pt ret;
+
+	ret = coefs[0];
+
+	for (i = 1; i <= power; i++) {
+		tmp = mul_fixed(x, coefs[i]);
+		
+		for (j = 1; j < i; j++)
+			tmp = mul_fixed(tmp, x);
+
+		ret = add_fixed(ret, tmp);
+	}
+
+	return ret;
+}

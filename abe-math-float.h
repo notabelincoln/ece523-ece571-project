@@ -14,4 +14,7 @@ float area_trap(float delta_x, float y1, float y2);
 
 /* approximate a sin value using taylor series */
 float sin_taylor(float x);
+
+/* compute the value of a polynomial (lowest degree coefficient first) evaluated at x */
+float poly_eval(const float *coefs, int power, float x);
 #endif

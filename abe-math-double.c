@@ -43,3 +43,25 @@ double sin_taylor(double x)
 	return ret;
 }
 
+/* compute the value of a polynomial (lowest degree coefficient first) evaluated at x */
+double poly_eval(const double *coefs, int power, double x)
+{
+	int i;
+	int j;
+	
+	double tmp;
+	double ret;
+
+	ret = coefs[0];
+
+	for (i = 1; i <= power; i++) {
+		tmp = x * coefs[i];
+		
+		for (j = 1; j < i; j++)
+			tmp = tmp * x;
+
+		ret += tmp;
+	}
+
+	return ret;
+}

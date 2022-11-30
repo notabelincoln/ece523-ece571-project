@@ -43,4 +43,7 @@ fixed_pt sin_fixed_taylor(fixed_pt x);
 
 /* calculated approximate value for sin(x) */
 fixed_pt sin_fixed(fixed_pt x);
+
+/* compute the value of a polynomial (lowest degree coefficient first) evaluated at x */
+fixed_pt poly_fixed(const fixed_pt *coefs, int power, fixed_pt x);
 #endif

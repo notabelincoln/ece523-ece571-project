@@ -14,4 +14,7 @@ double area_trap(double delta_x, double y1, double y2);
 
 /* approximate a sin value using taylor series */
 double sin_taylor(double x);
+
+/* compute the value of a polynomial (lowest degree coefficient first) evaluated at x */
+double poly_eval(const double *coefs, int power, double x);
 #endif
