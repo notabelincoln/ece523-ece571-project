@@ -14,7 +14,7 @@ double:
 	$(CC) -o $(OUTPUT)-double.$(OFTYPE) $(CFLAGS) main-double.c abe-math-double.c $(LFLAGS)
 
 fx5pt11:
-	$(CC) -o $(OUTPUT)-5-11.$(OFTYPE) $(CFLAGS) main-5-11.c fixed-point-5-11.c $(LFLAGS)
+	$(CC) -o $(OUTPUT)-05-11.$(OFTYPE) $(CFLAGS) main-5-11.c fixed-point-5-11.c $(LFLAGS)
 
 fx16pt16:
 	$(CC) -o $(OUTPUT)-16-16.$(OFTYPE) $(CFLAGS) main-16-16.c fixed-point-16-16.c $(LFLAGS)
