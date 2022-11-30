@@ -23,7 +23,7 @@ fx32pt32:
 	$(CC) -o $(OUTPUT)-32-32.$(OFTYPE) $(CFLAGS) main-32-32.c fixed-point-32-32.c $(LFLAGS)
 
 vals:
-	$(CC) -o print-values.out $(CFLAGS) main-print-values.c $(LFLAGS)
+	$(CC) -o print-values.$(OFTYPE) $(CFLAGS) main-print-values.c $(LFLAGS)
 
 .PHONY: clean
 clean:
