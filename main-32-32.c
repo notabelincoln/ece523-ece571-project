@@ -52,9 +52,9 @@ int main(int argc, char **argv)
 	} else {
 		switch (function) {
 		case (0):
-			printf("%44s,%44s\n","x","sin_taylor");
+			printf("%36s,%36s\n","x","sin_taylor");
 			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_4_PI; x++)
-				printf("%44.40lf,%44.40lf\n",
+				printf("%36.32lf,%36.32lf\n",
 						(double)x / ((fixed_pt)1 << 32),
 						(double)sin_fixed(x)/ ((fixed_pt)1 << 32));
 			break;
