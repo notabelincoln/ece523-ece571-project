@@ -1,4 +1,6 @@
 #!/bin/bash
-for i in run-test-*;
-	do echo $i && ./$i sin;
+# compute sin values
+for i in {1..5}; # compile up to 5 taylor series terms
+do	make CFLAGS=-DSIN_TAYLOR_N=$i;
+	echo $i;
 done
