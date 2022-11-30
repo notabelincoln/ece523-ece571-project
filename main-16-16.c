@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	int function;
 	int display;
 
-	double x;
+	fixed_pt x;
 
 	display = 0;
 
@@ -45,18 +45,18 @@ int main(int argc, char **argv)
 	if (display == 0) {
 		switch (function) {
 		case (0):
-			for (x = -(2 * M_PI); x <= (2 * M_PI); x += 0.0000001)
-				sin_fixed(double_to_fixed(x));
+			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_4_PI; x++)
+				sin_fixed(x);
 			break;
 		}
 	} else {
 		switch (function) {
 		case (0):
-			printf("%11.7s,%10.7s\n","x","sin_taylor");
-			for (x = -(2 * M_PI); x <= (2 * M_PI); x += 0.0000001)
-				printf("%11.7lf,%10.7lf\n",
-						x,
-						(double)sin_fixed(double_to_fixed(x)) / ((fixed_pt)1 << 16));
+			printf("%20s,%20s\n","x","sin_taylor");
+			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_4_PI; x++)
+				printf("%20.16lf,%20.16lf\n",
+						(double)x / ((fixed_pt)1 << 16),
+						(double)sin_fixed(x) / ((fixed_pt)1 << 16));
 			break;
 		}
 	}
