@@ -1,0 +1,4 @@
+#!/bin/bash
+for i in run-test-*;
+	do echo $i && ./$i sin;
+done
