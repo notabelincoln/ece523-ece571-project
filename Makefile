@@ -1,9 +1,9 @@
 CC := gcc
-CFLAGS += -Wall
+CFLAGS += -Wall -O3
 LFLAGS := -lm
 OUTPUT := run-test
 
-all: float double fx5pt11 fx16pt16 fx32pt32
+all: float double fx5pt11 fx16pt16 fx32pt32 vals
 
 float:
 	$(CC) -o $(OUTPUT)-float $(CFLAGS) main-float.c abe-math-float.c $(LFLAGS)
@@ -21,4 +21,4 @@ fx32pt32:
 	$(CC) -o $(OUTPUT)-32-32 $(CFLAGS) main-32-32.c fixed-point-32-32.c $(LFLAGS)
 
 vals:
-	$(CC) -o print-vals $(CFLAGS) main-print-values.c $(LFLAGS)
+	$(CC) -o print-values $(CFLAGS) main-print-values.c $(LFLAGS)
