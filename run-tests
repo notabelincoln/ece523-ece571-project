@@ -2,10 +2,10 @@
 # compute sin values
 for i in {1..5}; # compile up to 5 taylor series terms
 do
-	make CFLAGS=-DSIN_TAYLOR_N=$i;
+	make CFLAGS=-DSIN_TAYLOR_N=$i >> /dev/null;
 
 	# gather the results for each test
-	for j in test-0*.bin;
+	for j in test-*.bin;
 	do
 		OFILE_BASE="$(basename $j .bin)-sin-$i"
 		./$j sin display > results-"$OFILE_BASE".csv;
@@ -17,6 +17,7 @@ do
 		# benchmark the performance 10 times to filter out noise
 		for k in {1..10};
 		do
+			printf "Running $j with $i Taylor series terms, test $k\n"
 			printf "TEST $k\n"  >> "$OFILE_PERF"
 			
 			perf stat -o "$OFILE_PERF" \
