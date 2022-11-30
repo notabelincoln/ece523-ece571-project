@@ -1,14 +1,14 @@
 /* Abe Jordan
  * ECE 523 / ECE 571
  * Project
- * main.c
+ * main-16-16.c
  */
 
 #include <stdio.h>
 #include <math.h>
 #include <string.h>
 
-#include "abe-math.h"
+#include "fixed-point-16-16.h"
 
 int main(int argc, char **argv)
 {
@@ -17,45 +17,49 @@ int main(int argc, char **argv)
 	int display;
 
 	double x;
-	double x_min;
-	double x_max;
-	double x_step;
-	double (*f)(double);
 
-	/* check that user specifies function */
-	if ((argc < 2) || (argc > 3)) {
-		printf("USAGE: run-test [function] [display]\n");
+	display = 0;
+
+	/* check if user called program only */
+	if (argc == 1) {
+		printf("USAGE: run-test-double [OPTIONS]\n");
 		return -1;
 	}
 
-	/* determine what function user wants to compute */
-	if (strcmp(argv[1], "sin") == 0) {
-		function = 0;
-		f = &sin_taylor;
-		x_min = -2 * M_PI;
-		x_max = 2 * M_PI;
-		x_step = 0.00000001;
-	} else {
-		function = 1;
-	}
-
-	/* determine whether to display data */
-	if (argc == 3) {
-		if (strcmp(argv[2], "display") == 0) {
-			display = 1;
-		} else {
-			display = 0;
+	/* determine the function the user wants */
+	for (i = 1; i < argc; i++) {
+		if (strncmp(argv[i], "sin", 256) == 0) {
+			function = 0;
+			break;
 		}
 	}
-	if (display == 1) {
-		for (x = x_min; x <= x_max; x += x_step)
-			printf("%10.7lf, %20.17lf\n", x, (*f)(x));
-	} else {
-		for (x = x_min; x <= x_max; x += x_step)
-			(*f)(x);
+
+	/* determine whether to display the output */
+	for (i = 1; i < argc; i++) {
+		if (strncmp(argv[i], "display", 256) == 0) {
+			display = 1;
+			break;
+		}
 	}
 
-	printf("Completed\n");
+	if (display == 0) {
+		switch (function) {
+		case (0):
+			for (x = -(2 * M_PI); x <= (2 * M_PI); x += 0.0000001)
+				sin_fixed(double_to_fixed(x));
+			break;
+		}
+	} else {
+		switch (function) {
+		case (0):
+			printf("%11.7s,%10.7s\n","x","sin_taylor");
+			for (x = -(2 * M_PI); x <= (2 * M_PI); x += 0.0000001)
+				printf("%11.7lf,%10.7lf\n",
+						x,
+						(double)sin_fixed(double_to_fixed(x)) / ((fixed_pt)1 << 16));
+			break;
+		}
+	}
 
 	return 0;
 }

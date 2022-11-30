@@ -12,7 +12,7 @@
 /* convert double precision floating point value to fixed-point value */
 fixed_pt double_to_fixed(double x)
 {
-	return (fixed_pt)(x * (1 << 32));
+	return (fixed_pt)(x * ((fixed_pt)1 << 32));
 }
 
 /* add two fixed-point numbers */
@@ -81,7 +81,7 @@ fixed_pt sin_fixed(fixed_pt x)
 
 	if (x < FIXED_PT_MINUS_HALF_PI)
 		ret = sin_fixed(add_fixed(x, FIXED_PT_2_PI));
-	else if (x > (3 * (FIXED_PT_HALF_PI)))
+	else if (x > (3 * FIXED_PT_HALF_PI))
 		ret = sin_fixed(sub_fixed(x, 2 * FIXED_PT_PI));
 	else if (x > FIXED_PT_HALF_PI)
 		ret = -1 * sin_fixed(sub_fixed(x, FIXED_PT_PI));

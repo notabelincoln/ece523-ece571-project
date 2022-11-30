@@ -12,7 +12,7 @@
 /* convert double precision floating point value to fixed-point value */
 fixed_pt double_to_fixed(double x)
 {
-	return (fixed_pt)(x * 2048);
+	return (fixed_pt)(x * ((fixed_pt)1 << 16));
 }
 
 /* add two fixed-point numbers */
