@@ -15,6 +15,12 @@ fixed_pt double_to_fixed(double x)
 	return (fixed_pt)(x * ((fixed_pt)1 << 32));
 }
 
+/* convert fixed-point value to double precision floating point value */
+double fixed_to_double(fixed_pt x)
+{
+	return (double)x / FIXED_PT_1;
+}
+
 /* add two fixed-point numbers */
 fixed_pt add_fixed(fixed_pt x1, fixed_pt x2)
 {
