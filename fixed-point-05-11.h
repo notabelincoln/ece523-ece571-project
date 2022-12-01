@@ -3,8 +3,8 @@
  * Project
  * fixed-point-5-11.h
  */
-#ifndef FIXED_POINT_5_11_H
-#define FIXED_POINT_5_11_H
+#ifndef FIXED_POINT_05_11_H
+#define FIXED_POINT_05_11_H
 
 #include <stdint.h>
 
