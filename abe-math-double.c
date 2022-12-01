@@ -65,3 +65,16 @@ double poly_eval(const double *coefs, int power, double x)
 
 	return ret;
 }
+
+/* compute simpsons method of a general function */
+double sim(double (*f)(double f_x), double x_a, double x_b)
+{
+	double tmp;
+	double ret;
+
+	tmp = (x_b - x_a) / 6.0;
+	ret = tmp * (f(x_a) + 4.0 * f((x_a + x_b) / 2) + f(x_b));
+
+	return ret;
+}
+

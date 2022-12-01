@@ -17,4 +17,7 @@ float sin_taylor(float x);
 
 /* compute the value of a polynomial (lowest degree coefficient first) evaluated at x */
 float poly_eval(const float *coefs, int power, float x);
+
+/* compute simpsons method of a general function */
+float sim(float (*f)(float f_x), float x_a, float x_b);
 #endif

@@ -65,3 +65,16 @@ float poly_eval(const float *coefs, int power, float x)
 
 	return ret;
 }
+
+/* compute simpsons method of a general function */
+float sim(float (*f)(float f_x), float x_a, float x_b)
+{
+	float tmp;
+	float ret;
+
+	tmp = (x_b - x_a) / 6.0;
+	ret = tmp * (f(x_a) + 4.0 * f((x_a + x_b) / 2) + f(x_b));
+
+	return ret;
+}
+

@@ -17,4 +17,7 @@ double sin_taylor(double x);
 
 /* compute the value of a polynomial (lowest degree coefficient first) evaluated at x */
 double poly_eval(const double *coefs, int power, double x);
+
+/* compute simpsons method of a general function */
+double sim(double (*f)(double f_x), double x_a, double x_b);
 #endif
