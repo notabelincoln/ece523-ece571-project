@@ -119,3 +119,32 @@ fixed_pt poly_fixed(const fixed_pt *coefs, int power, fixed_pt x)
 
 	return ret;
 }
+
+/* compute simpsons method of a general function */
+fixed_pt sim_fixed(fixed_pt (*f)(fixed_pt f_x), fixed_pt x_a, fixed_pt x_b)
+{
+	fixed_pt tmp1;
+	fixed_pt tmp2;
+	fixed_pt tmp3;
+	fixed_pt ret;
+
+	tmp1 = div_fixed_int(f(x_a), 6);
+	tmp2 = div_fixed_int(f(x_b), 6);
+	tmp1 = add_fixed(tmp1, tmp2);
+	
+	tmp2 = div_fixed_int(f(x_a), 2);
+	tmp3 = div_fixed_int(f(x_b), 2);
+	tmp2 = add_fixed(tmp2, tmp3);
+	
+	tmp2 = f(tmp2); 
+	tmp2 = div_fixed_int(tmp2, 6); 
+	tmp2 = mul_fixed(tmp2, 4 << 11);
+	
+	tmp1 = add_fixed(tmp1, tmp2);
+
+	tmp2 = sub_fixed(x_b, x_a);
+
+	ret = mul_fixed(tmp1, tmp2);
+
+	return ret;
+}

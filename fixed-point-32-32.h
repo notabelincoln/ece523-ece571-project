@@ -52,4 +52,7 @@ fixed_pt sin_fixed(fixed_pt x);
 
 /* compute the value of a polynomial (lowest degree coefficient first) evaluated at x */
 fixed_pt poly_fixed(const fixed_pt *coefs, int power, fixed_pt x);
+
+/* compute simpsons method of a general function */
+fixed_pt sim_fixed(fixed_pt (*f)(fixed_pt f_x), fixed_pt x_a, fixed_pt x_b);
 #endif
