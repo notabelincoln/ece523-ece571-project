@@ -8,7 +8,7 @@
 #include <math.h>
 #include <string.h>
 
-#include "fixed-point-5-11.h"
+#include "fixed-point-05-11.h"
 
 int main(int argc, char **argv)
 {
