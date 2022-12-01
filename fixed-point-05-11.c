@@ -3,7 +3,7 @@
  * Project
  * fixed-point-5-11.c
  */
-#include "fixed-point-5-11.h"
+#include "fixed-point-05-11.h"
 
 #ifndef SIN_TAYLOR_N
 #define SIN_TAYLOR_N 4 // number of terms to compute for sin(x)
@@ -121,7 +121,7 @@ fixed_pt poly_fixed(const fixed_pt *coefs, int power, fixed_pt x)
 }
 
 /* compute simpsons method of a general function */
-fixed_pt sim_fixed(fixed_pt *f, fixed_pt x_a, fixed_pt x_b)
+fixed_pt sim_fixed(fixed_pt (*f)(fixed_pt f_x), fixed_pt x_a, fixed_pt x_b)
 {
 	fixed_pt tmp1;
 	fixed_pt tmp2;
