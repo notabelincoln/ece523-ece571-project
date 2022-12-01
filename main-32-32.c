@@ -43,14 +43,14 @@ int main(int argc, char **argv)
 		}
 	}
 
-	if (display == 0) {
+	if (display == 0) { /* run code without displaying results */
 		switch (function) {
 		case (0):
 			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_4_PI; x += x_step)
 				sin_fixed(x);
 			break;
 		}
-	} else {
+	} else { /* run code and display results */
 		switch (function) {
 		case (0):
 			printf("%36s,%36s\n","x","sin_taylor");
