@@ -20,8 +20,14 @@ typedef int32_t fixed_pt2;
 #define FIXED_PT_4_PI ((fixed_pt)(0x6488))
 #define FIXED_PT_MINUS_4_PI ((fixed_pt)(0x9b78))
 
+#define FIXED_PT_BIT (11)
+#define FIXED_PT_1 ((fixed_pt)1 << FIXED_PT_BIT)
+
 /* convert double precision floating point value to fixed-point value */
 fixed_pt double_to_fixed(double x);
+
+/* convert fixed-point value to double precision floating point value */
+double fixed_to_double(fixed_pt x);
 
 /* add two fixed-point numbers */
 fixed_pt add_fixed(fixed_pt x1, fixed_pt x2);
