@@ -55,8 +55,8 @@ int main(int argc, char **argv)
 			printf("%20s,%20s\n","x","sin_taylor");
 			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_4_PI; x++)
 				printf("%20.16lf,%20.16lf\n",
-						(double)x / ((fixed_pt)1 << 16),
-						(double)sin_fixed(x) / ((fixed_pt)1 << 16));
+						fixed_to_double(x),
+						fixed_to_double(sin_fixed(x)));
 			break;
 		}
 	}
