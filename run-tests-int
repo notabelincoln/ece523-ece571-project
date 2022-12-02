@@ -15,7 +15,7 @@ do
 	do
 		for k in test-*.bin;
 		do
-			OFILE_BASE="$(basename $k) .bin)-$j-$i"
+			OFILE_BASE="$(basename $k .bin)-$j-$i"
 			./$k $j display > "$RFOLDER"/results-"$OFILE_BASE".csv
 
 			OFILE_PERF="$RFOLDER"/perf-"$OFILE_BASE".txt
