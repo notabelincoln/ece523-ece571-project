@@ -12,7 +12,7 @@
 /* convert double precision floating point value to fixed-point value */
 fixed_pt double_to_fixed(double x)
 {
-	return (fixed_pt)(x * ((fixed_pt)1 << 32));
+	return (fixed_pt)(x * FIXED_PT_1);
 }
 
 /* convert fixed-point value to double precision floating point value */
@@ -40,7 +40,7 @@ fixed_pt mul_fixed(fixed_pt x1, fixed_pt x2)
 
 	tmp = (fixed_pt2)x1 * (fixed_pt2)x2;
 
-	return (fixed_pt)(tmp >> 32);
+	return (fixed_pt)(tmp >> FIXED_PT_BIT);
 }
 
 /* divide fixed-point number x1 by fixed-point number x2 */
@@ -48,7 +48,7 @@ fixed_pt div_fixed(fixed_pt x1, fixed_pt x2)
 {
 	fixed_pt2 tmp;
 
-	tmp = ((fixed_pt2)(x1) << 32) / (fixed_pt2)(x2);
+	tmp = ((fixed_pt2)(x1) << FIXED_PT_BIT) / (fixed_pt2)(x2);
 
 	return (fixed_pt)tmp;
 }
@@ -138,7 +138,7 @@ fixed_pt sim_fixed(fixed_pt (*f)(fixed_pt f_x), fixed_pt x_a, fixed_pt x_b)
 	
 	tmp2 = f(tmp2); 
 	tmp2 = div_fixed_int(tmp2, 6); 
-	tmp2 = mul_fixed(tmp2, 4 << 11);
+	tmp2 = mul_fixed(tmp2, 4 * FIXED_PT_1);
 	
 	tmp1 = add_fixed(tmp1, tmp2);
 
@@ -148,3 +148,20 @@ fixed_pt sim_fixed(fixed_pt (*f)(fixed_pt f_x), fixed_pt x_a, fixed_pt x_b)
 
 	return ret;
 }
+
+/* compute rectangle area */
+fixed_pt area_rect(fixed_pt delta_x, fixed_pt y)
+{
+	return mul_fixed(delta_x, y);
+}
+
+/* compute trapezoid area */
+fixed_pt area_trap(fixed_pt delta_x, fixed_pt y1, fixed_pt y2)
+{
+	fixed_pt tmp;
+
+	tmp = div_fixed_int(y1, 2);
+	tmp = add_fixed(tmp, div_fixed_int(y2, 2));
+	return mul_fixed(tmp, delta_x);
+}
+
