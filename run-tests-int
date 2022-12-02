@@ -1,0 +1,43 @@
+#!/bin/bash
+# compute integral values
+RFOLDER="./results"
+
+if [ ! -d "$RFOLDER" ];
+then
+	mkdir -p $RFOLDER;
+fi
+
+for i in {1,2,4,8,10,20,40,80,100,200,400,800,1000};
+do
+	make CFLAGS=-DX_STEP_SCALE=$i >> /dev/null
+
+	for j in {poly,rect,trap,simp};
+	do
+		for k in test-*.bin;
+		do
+			OFILE_BASE="$(basename $k) .bin)-$j-$i"
+			./$k $j display > "$RFOLDER"/results-"$OFILE_BASE".csv
+
+			OFILE_PERF="$RFOLDER"/perf-"$OFILE_BASE".txt
+
+			rm -f "$OFILE_PERF"
+
+			# benchmark the performance 10 times to filter out noise
+			for l in {1..10};
+			do
+				printf "Running $j on $k with step-scale $i, test $l\n"
+				printf "TEST $l\n" >> "$OFILE_PERF"
+
+				perf stat -o "$OFILE_PERF" \
+					--append -e instructions:u,L1-icache-load-misses:u \
+					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+
+				perf stat -o "$OFILE_PERF" \
+					--append -e power/energy-pkg/ ./$k $j;
+
+				printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
+
+			done
+		done
+	done
+done
