@@ -2,11 +2,22 @@
 # compute integral values
 RFOLDER="./results/$(uname -n)"
 
-# create output folder if it doesn't already exist
-if [ ! -d "$RFOLDER" ];
-then
-	mkdir -p $RFOLDER;
-fi
+SAVE_PERF=0
+SAVE_CSV=0
+
+# determine if user wants to save output and/or perf results
+for a in $@
+do
+	if [ $a == perf ];
+	then
+		SAVE_PERF=1
+	fi
+
+	if [ $a == csv ];
+	then
+		SAVE_CSV=1
+	fi
+done
 
 # test the integration techniques with varying x deltas
 for i in {1,2,4,8,10,20,40,80,100,200,400,800,1000};
@@ -18,39 +29,63 @@ do
 		for k in test-*.bin;
 		do
 			OFILE_BASE="$(basename $k .bin)-$j-$i"
-			./$k $j display > "$RFOLDER"/results-"$OFILE_BASE".csv
 
-			OFILE_PERF="$RFOLDER"/perf-"$OFILE_BASE".txt
-
-			rm -f "$OFILE_PERF"
-
-			# benchmark the performance 10 times to filter out noise
-			for l in {1..10};
-			do
-				printf "Running $j on $k with step-scale $i, test $l\n"
-				printf "TEST $l\n" >> "$OFILE_PERF"
-
-				if [ $(uname -m) == armv7l ];
+			# save test output
+			if [ $SAVE_CSV == 1 ];
+			then
+				# create output folder if it doesn't already exist
+				if [ ! -d "$RFOLDER/output" ];
 				then
-					perf_5.10 stat -o "$OFILE_PERF" \
-						--append -e instructions:u,L1-icache-load-misses:u \
-						-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+					mkdir -p $RFOLDER/output;
+				fi
+				
+				printf "Getting $j output from $j with $i Taylor series terms\n"
 
-				else				
-					perf stat -o "$OFILE_PERF" \
-						--append -e instructions:u,L1-icache-load-misses:u \
-						-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+				./$k $j display > "$RFOLDER"/output/output-"$OFILE_BASE".csv;
+			fi
+			
+			# save perf results
+			if [ $SAVE_PERF == 1 ];
+			then
+
+				# create output folder if it doesn't already exist
+				if [ ! -d "$RFOLDER/perf" ];
+				then
+					mkdir -p $RFOLDER/perf;
 				fi
 
-				if [ $(uname -m) == x86_64 ];
-				then
-					perf stat -o "$OFILE_PERF" \
-						--append -e power/energy-pkg/ ./$k $j;
-				fi
+				OFILE_PERF="$RFOLDER"/perf/perf-"$OFILE_BASE".txt
 
-				printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
+				rm -f "$OFILE_PERF"
 
-			done
+				# benchmark the performance 10 times to filter out noise
+				for l in {1..10};
+				do
+					printf "Running $j on $k with step-scale $i, test $l\n"
+					printf "TEST $l\n" >> "$OFILE_PERF"
+
+					if [ $(uname -m) == armv7l ];
+					then
+						perf_5.10 stat -o "$OFILE_PERF" \
+							--append -e instructions:u,L1-icache-load-misses:u \
+							-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+
+					else				
+						perf stat -o "$OFILE_PERF" \
+							--append -e instructions:u,L1-icache-load-misses:u \
+							-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+					fi
+
+					if [ $(uname -m) == x86_64 ];
+					then
+						perf stat -o "$OFILE_PERF" \
+							--append -e power/energy-pkg/ ./$k $j;
+					fi
+
+					printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
+
+				done
+			fi
 		done
 	done
 done
