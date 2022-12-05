@@ -2,11 +2,22 @@
 # compute sin values
 RFOLDER="./results/$(uname -n)"
 
-# create output folder if it doesn't already exist
-if [ ! -d "$RFOLDER" ];
-then
-	mkdir -p $RFOLDER;
-fi
+SAVE_PERF=0
+SAVE_CSV=0
+
+# determine if user wants to save output and/or perf results
+for a in $@
+do
+	if [ $a == perf ];
+	then
+		SAVE_PERF=1
+	fi
+
+	if [ $a == csv ];
+	then
+		SAVE_CSV=1
+	fi
+done
 
 # compile up to 7 taylor series terms
 for i in {1..7}; 
@@ -17,38 +28,62 @@ do
 	for j in test-*.bin;
 	do
 		OFILE_BASE="$(basename $j .bin)-sin-$i"
-		
-		./$j sin display > "$RFOLDER"/results-"$OFILE_BASE".csv;
 
-		OFILE_PERF="$RFOLDER"/perf-"$OFILE_BASE".txt
-
-		rm -f "$OFILE_PERF"
-
-		# benchmark the performance 10 times to filter out noise
-		for k in {1..10};
-		do
-			printf "Running $j with $i Taylor series terms, test $k\n"
-			printf "TEST $k\n"  >> "$OFILE_PERF"
-
-			if [ $(uname -m) == armv7l ];
+		# save test output
+		if [ $SAVE_CSV == 1 ];
+		then
+			# create output folder if it doesn't already exist
+			if [ ! -d "$RFOLDER/output" ];
 			then
-				perf_5.10 stat -o "$OFILE_PERF" \
-					--append -e instructions:u,L1-icache-load-misses:u \
-					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
-
-			else				
-				perf stat -o "$OFILE_PERF" \
-					--append -e instructions:u,L1-icache-load-misses:u \
-					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
+				mkdir -p $RFOLDER/output;
 			fi
+			
+			printf "Getting output from $j with $i Taylor series terms\n"
 
-			if [ $(uname -m) == x86_64 ];
+			./$j sin display > "$RFOLDER"/output/output-"$OFILE_BASE".csv;
+		fi
+
+		# save perf results
+		if [ $SAVE_PERF == 1 ];
+		then
+
+			# create output folder if it doesn't already exist
+			if [ ! -d "$RFOLDER/perf" ];
 			then
-				perf stat -o "$OFILE_PERF" \
-					--append -e power/energy-pkg/ ./$j sin;
+				mkdir -p $RFOLDER/perf;
 			fi
+			
+			OFILE_PERF="$RFOLDER"/perf/perf-"$OFILE_BASE".txt;
 
-			printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
-		done
+			rm -f "$OFILE_PERF";
+
+			# benchmark the performance 10 times to filter out noise
+			for k in {1..10};
+			do
+				printf "Running $j with $i Taylor series terms, test $k\n"
+
+				printf "TEST $k\n"  >> "$OFILE_PERF"
+
+				if [ $(uname -m) == armv7l ];
+				then
+					perf_5.10 stat -o "$OFILE_PERF" \
+						--append -e instructions:u,L1-icache-load-misses:u \
+						-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
+
+				else				
+					perf stat -o "$OFILE_PERF" \
+						--append -e instructions:u,L1-icache-load-misses:u \
+						-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
+				fi
+
+				if [ $(uname -m) == x86_64 ];
+				then
+					perf stat -o "$OFILE_PERF" \
+						--append -e power/energy-pkg/ ./$j sin;
+				fi
+
+				printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
+			done
+		fi
 	done
 done
