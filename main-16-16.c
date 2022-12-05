@@ -109,7 +109,7 @@ int main(int argc, char **argv)
 			printf("%s,%s\n","x","sin_taylor");
 			for (x = x_sin_min; x <= x_sin_max; x += x_step) {
 				res = sin_fixed(x);
-				printf("%0.14lf,%014lf\n",
+				printf("%0.16lf,%0.16lf\n",
 						fixed_to_double(x),
 						fixed_to_double(res));
 			}
@@ -118,7 +118,7 @@ int main(int argc, char **argv)
 			printf("%s,%s\n","x","f(x)");
 			for (x = x_poly_min; x <= x_poly_max; x += x_step) {
 				res = poly_fixed(poly_coefs, poly_power, x);
-				printf("%0.14lf,%0.14lf\n",
+				printf("%0.16lf,%0.16lf\n",
 						fixed_to_double(x),
 						fixed_to_double(res));
 			}
@@ -127,7 +127,7 @@ int main(int argc, char **argv)
 			printf("%s,%s\n","x","rect");
 			for (x = 0; x <= x_sin_max; x += x_step) {
 				res += area_rect(x_step, sin_fixed(x));
-				printf("%0.14lf,%0.14lf\n",
+				printf("%0.16lf,%0.16lf\n",
 						fixed_to_double(x),
 						fixed_to_double(res));
 			}
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 				tmp = area_trap(x_step, sin_fixed(x),
 						sin_fixed(tmp));
 				res += tmp;
-				printf("%0.14lf,%0.14lf\n",
+				printf("%0.16lf,%0.16lf\n",
 						fixed_to_double(x),
 						fixed_to_double(res));
 			}
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
 			for (x = 0; x <= x_sin_max; x += 2 * x_step) {
 				tmp = add_fixed(x, 2 * x_step);
 				res += sim_fixed(sin_fixed, x, tmp);
-				printf("%0.14lf,%0.14lf\n",
+				printf("%0.16lf,%0.16lf\n",
 						fixed_to_double(x),
 						fixed_to_double(res));
 			}
