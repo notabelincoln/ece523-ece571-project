@@ -31,18 +31,18 @@ do
 			then
 				perf_5.10 stat -o "$OFILE_PERF" \
 					--append -e instructions:u,L1-icache-load-misses:u \
-					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j $k;
+					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
 
 			else				
 				perf stat -o "$OFILE_PERF" \
 					--append -e instructions:u,L1-icache-load-misses:u \
-					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j $k;
+					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
 			fi
 
 			if [ $(uname -m) == x86_64 ];
 			then
 				perf stat -o "$OFILE_PERF" \
-					--append -e power/energy-pkg/ ./$j $k;
+					--append -e power/energy-pkg/ ./$j sin;
 			fi
 
 			printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
