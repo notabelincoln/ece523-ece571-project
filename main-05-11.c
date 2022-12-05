@@ -109,7 +109,7 @@ int main(int argc, char **argv)
 			printf("%s,%s\n","x","sin_taylor");
 			for (x = x_sin_min; x <= x_sin_max; x += x_step) {
 				res = sin_fixed(x);
-				printf("%0.11lf,%011lf\n",
+				printf("%0.11lf,%0.11lf\n",
 						fixed_to_double(x),
 						fixed_to_double(res));
 			}
