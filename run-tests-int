@@ -59,11 +59,12 @@ do
 				rm -f "$OFILE_PERF"
 
 				# benchmark the performance 10 times to filter out noise
-				for l in {1..10};
+				for l in {01..10};
 				do
-					printf "Running $j on $k with step-scale $i, test $l\n"
+					printf "Running $j on $k with step-scale $i, test $l: "
 					printf "TEST $l\n" >> "$OFILE_PERF"
 
+					printf "L1 Cache - "
 					if [ $(uname -m) == armv7l ];
 					then
 						perf_5.10 stat -o "$OFILE_PERF" \
@@ -75,12 +76,18 @@ do
 							--append -e instructions:u,L1-icache-load-misses:u \
 							-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
 					fi
+					printf "DONE"
 
 					if [ $(uname -m) == x86_64 ];
 					then
+						printf ", Energy - "
+
 						perf stat -o "$OFILE_PERF" \
 							--append -e power/energy-pkg/ ./$k $j;
+
+						printf "DONE"
 					fi
+					printf "\n"
 
 					printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
 
