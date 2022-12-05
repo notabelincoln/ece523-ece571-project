@@ -1,0 +1,43 @@
+#!/bin/bash
+# compute sin values
+RFOLDER="./results"
+
+if [ ! -d "$RFOLDER" ];
+then
+	mkdir -p $RFOLDER;
+fi
+
+for i in {1..7}; # compile up to 5 taylor series terms
+do
+	make CFLAGS=-DSIN_TAYLOR_N=$i >> /dev/null
+
+	# gather the results for each test
+	for j in test-*.bin;
+	do
+		OFILE_BASE="$(basename $j .bin)-sin-$i"
+		./$j sin display > "$RFOLDER"/results-"$OFILE_BASE".csv;
+
+		OFILE_PERF="$RFOLDER"/perf-"$OFILE_BASE".txt
+
+		rm -f "$OFILE_PERF"
+
+		# benchmark the performance 10 times to filter out noise
+		for k in {1..10};
+		do
+			printf "Running $j with $i Taylor series terms, test $k\n"
+			printf "TEST $k\n"  >> "$OFILE_PERF"
+
+			perf stat -o "$OFILE_PERF" \
+				--append -e instructions:u,L1-icache-load-misses:u \
+				-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
+
+			if [ $(uname -m) == x86_64 ];
+			then
+				perf stat -o "$OFILE_PERF" \
+					--append -e power/energy-pkg/ ./$j sin;
+			fi
+
+			printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
+		done
+	done
+done
