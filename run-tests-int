@@ -2,6 +2,7 @@
 # compute integral values
 RFOLDER="./results/$(uname -n)"
 
+# create output folder if it doesn't already exist
 if [ ! -d "$RFOLDER" ];
 then
 	mkdir -p $RFOLDER;

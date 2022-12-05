@@ -2,6 +2,7 @@
 # compute sin values
 RFOLDER="./results/$(uname -n)"
 
+# create output folder if it doesn't already exist
 if [ ! -d "$RFOLDER" ];
 then
 	mkdir -p $RFOLDER;
@@ -16,6 +17,7 @@ do
 	for j in test-*.bin;
 	do
 		OFILE_BASE="$(basename $j .bin)-sin-$i"
+		
 		./$j sin display > "$RFOLDER"/results-"$OFILE_BASE".csv;
 
 		OFILE_PERF="$RFOLDER"/perf-"$OFILE_BASE".txt
