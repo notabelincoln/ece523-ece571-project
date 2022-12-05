@@ -1,6 +1,6 @@
 #!/bin/bash
 # compute integral values
-RFOLDER="./results"
+RFOLDER="./results/$(uname -n)"
 
 if [ ! -d "$RFOLDER" ];
 then
