@@ -38,7 +38,7 @@ do
 				mkdir -p $RFOLDER/output;
 			fi
 			
-			printf "Getting output from $j with $i Taylor series terms\n"
+			printf "Getting sin output from $j with $i Taylor series terms\n"
 
 			./$j sin display > "$RFOLDER"/output/output-"$OFILE_BASE".csv;
 		fi
