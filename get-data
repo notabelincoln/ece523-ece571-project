@@ -6,4 +6,9 @@ for i in "$RFOLDER"/perf-test-*;
 do
 	cat $i | grep -i joules | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-energy.csv
 	cat $i | grep -i elapsed | awk '{getline; print $1}' > "$RFOLDER"/"$(basename $i .txt)"-time.csv
+	cat $i | grep -i instructions | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-instructions.csv
+	cat $i | grep -i l1-icache-load-misses | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-l1-icache-misses.csv
+	cat $i | grep -i l1-dcache-loads | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-l1-dcache-loads.csv
+	cat $i | grep -i l1-dcache-load-misses | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-l1-dcache-load-misses.csv
+	
 done
