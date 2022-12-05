@@ -7,7 +7,7 @@ then
 	mkdir -p $RFOLDER;
 fi
 
-# compile up to 5 taylor series terms
+# compile up to 7 taylor series terms
 for i in {1..7}; 
 do
 	make CFLAGS=-DSIN_TAYLOR_N=$i >> /dev/null
