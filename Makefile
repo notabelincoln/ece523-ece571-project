@@ -3,9 +3,14 @@ CFLAGS += -Wall
 LFLAGS := -lm
 OUTPUT := test
 OFTYPE := bin
+TARGETS := float double fx5pt11 fx16pt16 vals
+
+ifeq ($(uname -m),x86_64)
+TARGETS += fx32pt32
+endif
 
 .PHONY: all
-all: float double fx5pt11 fx16pt16 fx32pt32 vals
+all: $(TARGETS)
 
 float:
 	$(CC) -o $(OUTPUT)-float.$(OFTYPE) $(CFLAGS) main-float.c abe-math-float.c $(LFLAGS)
