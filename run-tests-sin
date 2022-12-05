@@ -27,14 +27,22 @@ do
 			printf "Running $j with $i Taylor series terms, test $k\n"
 			printf "TEST $k\n"  >> "$OFILE_PERF"
 
-			perf stat -o "$OFILE_PERF" \
-				--append -e instructions:u,L1-icache-load-misses:u \
-				-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$j sin;
+			if [ $(uname -m) == armv7l ];
+			then
+				perf_5.10 stat -o "$OFILE_PERF" \
+					--append -e instructions:u,L1-icache-load-misses:u \
+					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+
+			else				
+				perf stat -o "$OFILE_PERF" \
+					--append -e instructions:u,L1-icache-load-misses:u \
+					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+			fi
 
 			if [ $(uname -m) == x86_64 ];
 			then
 				perf stat -o "$OFILE_PERF" \
-					--append -e power/energy-pkg/ ./$j sin;
+					--append -e power/energy-pkg/ ./$k $j;
 			fi
 
 			printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";

@@ -28,9 +28,17 @@ do
 				printf "Running $j on $k with step-scale $i, test $l\n"
 				printf "TEST $l\n" >> "$OFILE_PERF"
 
-				perf stat -o "$OFILE_PERF" \
-					--append -e instructions:u,L1-icache-load-misses:u \
-					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+				if [ $(uname -m) == armv7l ];
+				then
+					perf_5.10 stat -o "$OFILE_PERF" \
+						--append -e instructions:u,L1-icache-load-misses:u \
+						-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+
+				else				
+					perf stat -o "$OFILE_PERF" \
+						--append -e instructions:u,L1-icache-load-misses:u \
+						-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
+				fi
 
 				if [ $(uname -m) == x86_64 ];
 				then
