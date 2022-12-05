@@ -1,0 +1,4 @@
+#!/bin/bash
+# delete local data
+RFOLDER="./results/$(uname -n)"
+rm -f $RFOLDER/*.txt $RFOLDER/*.csv
