@@ -1,0 +1,9 @@
+#!/bin/bash
+# gather data and spit out nice results
+RFOLDER="./results"
+
+for i in "$RFOLDER"/perf-test-*;
+do
+	cat $i | grep -i joules | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-energy.csv
+	cat $i | grep -i elapsed | awk '{getline; print $1}' > "$RFOLDER"/"$(basename $i .txt)"-time.csv
+done
