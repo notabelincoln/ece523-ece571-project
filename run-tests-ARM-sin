@@ -32,9 +32,6 @@ do
 					--append -e instructions:u,L1-icache-load-misses:u \
 					-e L1-dcache-loads:u,L1-dcache-load-misses:u ./$k $j;
 
-				perf stat -o "$OFILE_PERF" \
-					--append -e power/energy-pkg/ ./$k $j;
-
 				printf -- "--------------------------------------------------------------------------------\n\n" >> "$OFILE_PERF";
 
 			done
