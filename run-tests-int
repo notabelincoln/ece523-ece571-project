@@ -39,7 +39,7 @@ do
 					mkdir -p $RFOLDER/output;
 				fi
 				
-				printf "Getting $j output from $j with $i Taylor series terms\n"
+				printf "Getting $j output from $k with scaling factor $i\n"
 
 				./$k $j display > "$RFOLDER"/output/output-"$OFILE_BASE".csv;
 			fi
