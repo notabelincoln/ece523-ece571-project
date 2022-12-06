@@ -1,68 +1,76 @@
 #!/bin/bash
 # gather data and spit out nice results
-RFOLDER=./results/$(uname -n)
-
-# check if there's any data to process
-if [[ ! -d $RFOLDER/perf ]];
-then
-	echo "No perf data found for this device"
-	exit 1
-fi
-
-# create the resulting folder
-if [[ ! -d $RFOLDER/perf-csv ]];
-then
-	mkdir -p $RFOLDER/perf-csv
-fi
-
-# create temporary folder
-if [[ ! -d $RFOLDER/perf-csv/tmp ]];
-then
-	mkdir -p $RFOLDER/perf-csv/tmp
-fi
-
-TFOLDER=$RFOLDER/perf-csv/tmp
-
-for i in $RFOLDER/perf/perf-test-*;
+for f in ./results/*/;
 do
+	RFOLDER=./results/$(basename $f)
 
-	FNAME=$(basename $i .txt)
-
-	if [ $(uname -m) == x86_64 ];
+	# check if there's any data to process
+	if [[ ! -d $RFOLDER/perf ]];
 	then
-		cat $i | grep -i joules | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-energy.csv
-		cat $i | grep -i elapsed | awk '{FS=" ";OFS="";getline; print $1}' | tr -d ',' > $TFOLDER/$FNAME-time.csv
-	else
-		cat $i | grep -i elapsed | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-time.csv
+		echo "No perf data found for this device (looking for $RFOLDER/perf)"
+		exit 1
 	fi
 
-	cat $i | grep -i instructions | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-instructions.csv
-	cat $i | grep -i l1-icache-load-misses | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-l1-icache-load-misses.csv
-	cat $i | grep -i l1-dcache-loads | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-l1-dcache-loads.csv
-	cat $i | grep -i l1-dcache-load-misses | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-l1-dcache-load-misses.csv
-
-	printf "energy,time,instructions,l1-icache-load-misses,l1-dcache-loads,l1-dcache-load-misses\n" > $RFOLDER/perf-csv/$FNAME.csv
-
-	# check if running on x86-64 machine
-	if [ $(uname -m) == x86_64 ]
+	# create the resulting folder
+	if [[ ! -d $RFOLDER/perf-csv ]];
 	then
-
-		cat $TFOLDER/$FNAME-energy.csv | \
-			paste -d , - $TFOLDER/$FNAME-time.csv | \
-			paste -d , - $TFOLDER/$FNAME-instructions.csv | \
-			paste -d , - $TFOLDER/$FNAME-l1-icache-load-misses.csv | \
-			paste -d , - $TFOLDER/$FNAME-l1-dcache-loads.csv | \
-			paste -d , - $TFOLDER/$FNAME-l1-dcache-load-misses.csv >> \
-			$RFOLDER/perf-csv/$FNAME.csv
-
-	else	
-		cat $TFOLDER/$FNAME-time.csv | \
-			paste -d , - $TFOLDER/$FNAME-instructions.csv | \
-			paste -d , - $TFOLDER/$FNAME-l1-icache-load-misses.csv | \
-			paste -d , - $TFOLDER/$FNAME-l1-dcache-loads.csv | \
-			paste -d , - $TFOLDER/$FNAME-l1-dcache-load-misses.csv >> \
-			$RFOLDER/perf-csv/$FNAME.csv
+		mkdir -p $RFOLDER/perf-csv
 	fi
 
-	rm -f $TFOLDER/$FNAME-*.csv
+	# create temporary folder
+	if [[ ! -d $RFOLDER/perf-csv/tmp ]];
+	then
+		mkdir -p $RFOLDER/perf-csv/tmp
+	fi
+
+	TFOLDER=$RFOLDER/perf-csv/tmp
+
+	for i in $RFOLDER/perf/perf-test-*;
+	do
+
+		FNAME=$(basename $i .txt)
+
+		if [ $(cat $RFOLDER/machine-arch.txt) == x86_64 ];
+		then
+			cat $i | grep -i joules | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-energy.csv
+			cat $i | grep -i elapsed | awk '{FS=" ";OFS="";getline; print $1}' | tr -d ',' > $TFOLDER/$FNAME-time.csv
+		else
+			cat $i | grep -i elapsed | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-time.csv
+		fi
+
+		cat $i | grep -i instructions | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-instructions.csv
+		cat $i | grep -i l1-icache-load-misses | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-l1-icache-load-misses.csv
+		cat $i | grep -i l1-dcache-loads | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-l1-dcache-loads.csv
+		cat $i | grep -i l1-dcache-load-misses | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-l1-dcache-load-misses.csv
+
+		if [ $(cat $RFOLDER/machine-arch.txt) == x86_64 ];
+		then
+			printf "energy,time,instructions,l1-icache-load-misses,l1-dcache-loads,l1-dcache-load-misses\n" > $RFOLDER/perf-csv/$FNAME.csv
+		else
+			printf "time,instructions,l1-icache-load-misses,l1-dcache-loads,l1-dcache-load-misses\n" > $RFOLDER/perf-csv/$FNAME.csv
+		fi
+
+		# check if machine is x86-64
+		if [ $(cat $RFOLDER/machine-arch.txt) == x86_64 ]
+		then
+
+			cat $TFOLDER/$FNAME-energy.csv | \
+				paste -d , - $TFOLDER/$FNAME-time.csv | \
+				paste -d , - $TFOLDER/$FNAME-instructions.csv | \
+				paste -d , - $TFOLDER/$FNAME-l1-icache-load-misses.csv | \
+				paste -d , - $TFOLDER/$FNAME-l1-dcache-loads.csv | \
+				paste -d , - $TFOLDER/$FNAME-l1-dcache-load-misses.csv >> \
+				$RFOLDER/perf-csv/$FNAME.csv
+
+		else	
+			cat $TFOLDER/$FNAME-time.csv | \
+				paste -d , - $TFOLDER/$FNAME-instructions.csv | \
+				paste -d , - $TFOLDER/$FNAME-l1-icache-load-misses.csv | \
+				paste -d , - $TFOLDER/$FNAME-l1-dcache-loads.csv | \
+				paste -d , - $TFOLDER/$FNAME-l1-dcache-load-misses.csv >> \
+				$RFOLDER/perf-csv/$FNAME.csv
+		fi
+
+		rm -f $TFOLDER/$FNAME-*.csv
+	done
 done
