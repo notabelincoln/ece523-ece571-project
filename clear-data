@@ -1,4 +1,15 @@
 #!/bin/bash
 # delete local data
-RFOLDER="./results/$(uname -n)"
-rm -f $RFOLDER/*/*.txt $RFOLDER/*/*.csv
+printf "WARNING: This will delete all data files associated with this hostname. Do not proceed if you do not know what you are doing. Are you sure you want to do this? [y/N] "
+
+read USER_CHOICE
+
+if [[ $USER_CHOICE == y  ||  $USER_CHOICE == Y ]];
+then
+	echo "Removing machine-associated data..."
+	RFOLDER="./results/$(uname -n)"
+	
+	rm -f $RFOLDER/perf/*.*
+	rm -f $RFOLDER/output/*.*
+	echo "Data removed"
+fi
