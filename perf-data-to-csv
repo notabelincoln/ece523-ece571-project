@@ -1,14 +1,49 @@
 #!/bin/bash
 # gather data and spit out nice results
-RFOLDER="./results"
+RFOLDER=./results/$(uname -n)
 
-for i in "$RFOLDER"/perf-test-*;
+# check if there's any data to process
+if [[ ! -d $RFOLDER/perf ]];
+then
+	echo "No perf data found for this device"
+	exit 1
+fi
+
+# create the resulting folder
+if [[ ! -d $RFOLDER/perf-csv ]];
+then
+	mkdir -p $RFOLDER/perf-csv
+fi
+
+# create temporary folder
+if [[ ! -d $RFOLDER/perf-csv/tmp ]];
+then
+	mkdir -p $RFOLDER/perf-csv/tmp
+fi
+
+TFOLDER=$RFOLDER/perf-csv/tmp
+
+for i in $RFOLDER/perf/perf-test-*;
 do
-	cat $i | grep -i joules | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-energy.csv
-	cat $i | grep -i elapsed | awk '{getline; print $1}' > "$RFOLDER"/"$(basename $i .txt)"-time.csv
-	cat $i | grep -i instructions | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-instructions.csv
-	cat $i | grep -i l1-icache-load-misses | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-l1-icache-misses.csv
-	cat $i | grep -i l1-dcache-loads | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-l1-dcache-loads.csv
-	cat $i | grep -i l1-dcache-load-misses | awk '{print $1}' > "$RFOLDER"/"$(basename $i .txt)"-l1-dcache-load-misses.csv
+
+	FNAME=$(basename $i .txt)
+	cat $i | grep -i joules | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-energy.csv
+	cat $i | grep -i elapsed | awk '{FS=" ";OFS="";getline; print $1}' | tr -d ',' > $TFOLDER/$FNAME-time.csv
+	cat $i | grep -i instructions | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-instructions.csv
+	cat $i | grep -i l1-icache-load-misses | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-l1-icache-load-misses.csv
+	cat $i | grep -i l1-dcache-loads | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-l1-dcache-loads.csv
+	cat $i | grep -i l1-dcache-load-misses | awk '{FS=" ";OFS="";print $1}' | tr -d ',' > $TFOLDER/$FNAME-l1-dcache-load-misses.csv
+
+	printf "energy,time,instructions,l1-icache-load-misses,l1-dcache-loads,l1-dcache-load-misses\n" > $RFOLDER/perf-csv/$FNAME.csv
+
+	cat $TFOLDER/$FNAME-energy.csv | \
+		paste -d , - $TFOLDER/$FNAME-time.csv | \
+		paste -d , - $TFOLDER/$FNAME-instructions.csv | \
+		paste -d , - $TFOLDER/$FNAME-l1-icache-load-misses.csv | \
+		paste -d , - $TFOLDER/$FNAME-l1-dcache-loads.csv | \
+		paste -d , - $TFOLDER/$FNAME-l1-dcache-load-misses.csv >> \
+		$RFOLDER/perf-csv/$FNAME.csv
 	
+	rm -f $TFOLDER/$FNAME-*.csv
+
 done
