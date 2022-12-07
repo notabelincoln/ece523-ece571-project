@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 		switch (function) {
 		case (0): // sin
 			printf("%s,%s\n","x","sin_taylor");
-			for (x = x_sin_min; x <= x_sin_max; x += x_step) {
+			for (x = FIXED_PT_MINUS_4_PI; x <= FIXED_PT_MINUS_2_PI; x += x_step) {
 				res = sin_fixed(x);
 				printf("%0.32lf,%0.32lf\n",
 						fixed_to_double(x),

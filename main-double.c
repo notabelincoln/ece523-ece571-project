@@ -107,12 +107,12 @@ int main(int argc, char **argv)
 		switch (function) {
 		case (0): // sin
 			printf("%s,%s\n","x","sin_taylor");
-			for (x = x_sin_min; x <= x_sin_max; x += x_step)
+			for (x = (-M_PI / 2); x <= (M_PI / 2); x += x_step)
 				printf("%0.11lf,%0.11lf\n", x, sin_taylor(x));
 			break;
 		case (1): // polynomial
 			printf("%s,%s\n","x","f(x)");
-			for (x = x_poly_min; x <= x_poly_max; x+= x_step) {
+			for (x = -2.0; x <= 2.0; x+= x_step) {
 				printf("%0.11lf,%0.11lf\n",
 						x,
 						poly_eval(poly_coefs, poly_power, x));
@@ -120,14 +120,14 @@ int main(int argc, char **argv)
 			break;
 		case (2): // rectangular integration
 			printf("%s,%s\n","x","rect");
-			for (x = 0.0; x <= x_sin_max; x+= x_step) {
+			for (x = 0.0; x <= (M_PI); x+= x_step) {
 				res += area_rect(x_step, sin_taylor(x));
 				printf("%0.11lf,%0.11lf\n", x, res);
 			}
 			break;
 		case (3): // trapezoidal integration
 			printf("%s,%s\n","x","trap");
-			for (x = 0.0; x <= x_sin_max; x+= x_step) {
+			for (x = 0.0; x <= (M_PI); x+= x_step) {
 				tmp = x + x_step;
 				tmp = area_trap(x_step, sin_taylor(x),
 						sin_taylor(tmp));
@@ -137,7 +137,7 @@ int main(int argc, char **argv)
 			break;
 		case (4): // simpsons rule
 			printf("%s,%s\n","x","simpsons");
-			for (x = 0.0; x <= x_sin_max; x += tmp) {
+			for (x = 0.0; x <= (M_PI); x += tmp) {
 				tmp = 2 * x_step;
 				res += sim(sin_taylor, x, x + tmp);
 				printf("%0.11lf,%0.11lf\n", x, res);
