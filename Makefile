@@ -9,6 +9,11 @@ ifeq ($(shell uname -m),x86_64)
 TARGETS += fx32pt32
 endif
 
+
+ifeq ($(shell uname -m),aarch64)
+TARGETS += fx32pt32
+endif
+
 .PHONY: all
 all: $(TARGETS)
 
