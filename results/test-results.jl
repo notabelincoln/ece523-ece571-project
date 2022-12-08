@@ -30,7 +30,13 @@ for r in root[2]
 
 			for i in num_list
 
-				df_tmp = DataFrame([[i]], [op]);
+				if (op == "sin")
+					col1_name = "taylor-terms"
+				else
+					col1_name = "x-scale"
+				end
+
+				df_tmp = DataFrame([[i]], [col1_name]);
 
 				local f = @sprintf("./%s/perf-csv/perf-test-%s-%s-%d.csv", mach, t, op, i);
 				local df = DataFrame(CSV.File(f));
@@ -76,7 +82,9 @@ for r in root[2]
 				#@printf("%s: %s-%s-%d\n", r, t, op, i)
 			end
 
-			println(df_out)
+			f_out_name = @sprintf("./%s-%s-%s.csv", r, t op)
+
+			CSV.write(f_out_name, df_out)
 		end
 	end
 end
