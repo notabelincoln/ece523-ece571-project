@@ -1,5 +1,5 @@
 #!/usr/bin/julia
-using CSV, Plots, Printf, DataFrames
+using CSV, Plots, Printf, DataFrames, Statistics
 
 # get files and directories
 (root, dirs, files) = walkdir(".");
@@ -18,6 +18,8 @@ for r in root[2]
 
 	for t in tests
 		for op in ["rect", "trap", "sin"]
+			df_out = DataFrame();
+
 			if (op == "sin")
 				num_list = [1, 2, 3, 4, 5, 6, 7];
 			else
@@ -27,29 +29,54 @@ for r in root[2]
 			end
 
 			for i in num_list
+
+				df_tmp = DataFrame([[i]], [op]);
+
 				local f = @sprintf("./%s/perf-csv/perf-test-%s-%s-%d.csv", mach, t, op, i);
 				local df = DataFrame(CSV.File(f));
 
 				if (arch == "x86_64")
-					df = filter(row->typeof(row.energy) != AbstractString, df)
+					df = filter(row->typeof(row.energy) != String7, df)
 				end
 
-				df = filter(row->typeof(row.time) != AbstractString, df)
-				df = filter(row->typeof(row."l1-icache-load-misses") != AbstractString, df)
+				df = filter(row->typeof(row.time) != String7, df)
+				df = filter(row->typeof(row."l1-icache-load-misses") != String7, df)
 				df = filter(row->typeof(row."l1-dcache-load-misses") != String7, df)
 
+				if (isempty(df))
+					continue
+				end
+
 				df[!,"l1-icache-miss-rate"] = df."l1-icache-load-misses" ./ df.instructions
-				df[!,"l1-icache-miss-rate"] = df."l1-dcache-load-misses" ./ df."l1-dcache-loads"
+				df[!,"l1-dcache-miss-rate"] = df."l1-dcache-load-misses" ./ df."l1-dcache-loads"
 				
 				if (arch == "x86_64")
 					df[!,"power"] = df.energy ./ df.time
 					df[!,"energy-delay"] = df.energy .* df.time
 					df[!,"energy-delay-2"] = df.energy .* df.time .* df.time
+
 				end
+
+				df_tmp[!,"time"] = [Statistics.mean(df.time)]
+				df_tmp[!,"l1-icache-miss-rate"] = [Statistics.mean(df."l1-icache-miss-rate")] 
+				df_tmp[!,"l1-dcache-miss-rate"] = [Statistics.mean(df."l1-dcache-miss-rate")] 
 				
-				@printf("%s: %s-%s-%d\n", r, t, op, i)
-				println(df)
+				if (arch == "x86_64")
+					df_tmp[!,"energy"] = [Statistics.mean(df.energy)] 
+					df_tmp[!,"power"] = [Statistics.mean(df.power)]
+					df_tmp[!,"energy-delay"] = [Statistics.mean(df."energy-delay")] 
+					df_tmp[!,"energy-delay-2"] = [Statistics.mean(df."energy-delay-2")] 
+				end
+
+				df_tmp[!,"l1-icache-miss-rate"] = [Statistics.mean(df."l1-icache-miss-rate")] 
+				df_tmp[!,"l1-dcache-miss-rate"] = [Statistics.mean(df."l1-dcache-miss-rate")] 
+
+				df_out = append!(df_out, df_tmp)
+
+				#@printf("%s: %s-%s-%d\n", r, t, op, i)
 			end
+
+			println(df_out)
 		end
 	end
 end
