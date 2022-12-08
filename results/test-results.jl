@@ -5,13 +5,11 @@ using CSV, Plots, Printf, DataFrames
 (root, dirs, files) = walkdir(".");
 
 # main loop
-for r in ["ampere", "mini-cheems", "lord-cheems"]
+for r in root[2]
 	local mach = r
 	local arch = chomp(read(@sprintf("%s/machine-arch.txt", mach), String));
 	@printf("Running Data Analysis and Compilation for %s (%s)\n", mach, arch);
 
-	# TODO: add check for 32-32 value support on architecture
-	
 	if (arch == "x86_64" || arch == "aarch64")
 		tests = ["float", "double", "05-11", "16-16", "32-32"]
 	else
@@ -31,6 +29,14 @@ for r in ["ampere", "mini-cheems", "lord-cheems"]
 			for i in num_list
 				local f = @sprintf("./%s/perf-csv/perf-test-%s-%s-%d.csv", mach, t, op, i);
 				local df = DataFrame(CSV.File(f));
+
+				if (arch == "x86_64")
+					df = filter(row->typeof(row.energy) != AbstractString, df)
+				end
+
+				df = filter(row->typeof(row.time) != AbstractString, df)
+				df = filter(row->typeof(row."l1-icache-load-misses") != AbstractString, df)
+				df = filter(row->typeof(row."l1-dcache-load-misses") != String7, df)
 
 				df[!,"l1-icache-miss-rate"] = df."l1-icache-load-misses" ./ df.instructions
 				df[!,"l1-icache-miss-rate"] = df."l1-dcache-load-misses" ./ df."l1-dcache-loads"
