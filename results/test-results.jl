@@ -82,7 +82,7 @@ for r in root[2]
 				#@printf("%s: %s-%s-%d\n", r, t, op, i)
 			end
 
-			f_out_name = @sprintf("./%s-%s-%s.csv", r, t op)
+			f_out_name = @sprintf("./%s-%s-%s.csv", r, t, op)
 
 			CSV.write(f_out_name, df_out)
 		end
