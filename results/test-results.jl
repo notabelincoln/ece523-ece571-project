@@ -1,11 +1,18 @@
 #!/usr/bin/julia
 using CSV, Plots, Printf, DataFrames, Statistics
 
+OFOLDER_NAME = "compiled-results";
+
 # get files and directories
 (root, dirs, files) = walkdir(".");
 
 # main loop
 for r in root[2]
+
+	if (r == OFOLDER_NAME)
+		continue
+	end
+
 	local mach = r
 	local arch = chomp(read(@sprintf("%s/machine-arch.txt", mach), String));
 	@printf("Running Data Analysis and Compilation for %s (%s)\n", mach, arch);
@@ -82,7 +89,7 @@ for r in root[2]
 				#@printf("%s: %s-%s-%d\n", r, t, op, i)
 			end
 
-			f_out_name = @sprintf("./%s-%s-%s.csv", r, t, op)
+			f_out_name = @sprintf("./%s/%s-%s-%s.csv", OFOLDER_NAME, r, t, op)
 
 			CSV.write(f_out_name, df_out)
 		end
