@@ -1,7 +1,7 @@
 #!/usr/bin/julia
 using CSV, Plots, Printf, DataFrames, Statistics
 
-OFOLDER_NAME = "compiled-results";
+OFOLDER_NAME = "compiled-perf-csv-ece571";
 
 # get files and directories
 (root, dirs, files) = walkdir(".");
