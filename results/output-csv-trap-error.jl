@@ -38,7 +38,7 @@ for i in x_scales
 	global df_out = append!(df_out, df_tmp);
 end
 
-f_out_name = "./compiled-perf-csv-ece523/test-trap-error.csv";
+f_out_name = "./compiled-perf-csv-ece523/trap-error.csv";
 CSV.write(f_out_name, df_out);
 
 
