@@ -38,6 +38,7 @@ for i in taylor_terms
 	global df_out = append!(df_out, df_tmp);
 end
 
-println(df_out);
+f_out_name = "./compiled-perf-csv-ece523/test-sin-error.csv";
+CSV.write(f_out_name, df_out);
 
 
