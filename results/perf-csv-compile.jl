@@ -24,7 +24,7 @@ for r in root[2]
 	end
 
 	for t in tests
-		for op in ["rect", "trap", "sin"]
+		for op in ["rect", "trap", "sin", "simp"]
 			df_out = DataFrame();
 
 			if (op == "sin")
@@ -38,9 +38,9 @@ for r in root[2]
 			for i in num_list
 
 				if (op == "sin")
-					col1_name = "taylor-terms"
+					col1_name = "taylor_terms"
 				else
-					col1_name = "x-scale"
+					col1_name = "x_scale"
 				end
 
 				df_tmp = DataFrame([[i]], [col1_name]);
@@ -92,6 +92,8 @@ for r in root[2]
 			f_out_name = @sprintf("./%s/%s-%s-%s.csv", OFOLDER_NAME, r, t, op)
 
 			CSV.write(f_out_name, df_out)
+
+			println(df_out);
 		end
 	end
 end
