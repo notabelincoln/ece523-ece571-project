@@ -15,6 +15,8 @@ for i in taylor_terms
 	df_tmp = DataFrame([[i]], ["taylor_terms"]);
 
 	for t in test_types
+		@printf("Calculating sin error for %s, %d\n", t, i);
+		
 		# assign the csv name
 		local csv_name = @sprintf("output-test-%s-sin-%d.csv", t, i);
 

@@ -15,6 +15,8 @@ for i in x_scales
 	df_tmp = DataFrame([[i]], ["x_scale"]);
 
 	for t in test_types
+		@printf("Calculating trap error for %s, %d\n", t, i);
+		
 		# assign the csv name
 		local csv_name = @sprintf("output-test-%s-trap-%d.csv", t, i);
 

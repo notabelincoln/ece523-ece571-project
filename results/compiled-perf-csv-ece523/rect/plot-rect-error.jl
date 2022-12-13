@@ -18,12 +18,14 @@ for m in ["energy", "time", "power"]
 		local df_t[!,m] = df_m[:,t]
 
 		plt = plot!(Vector(df_t[:,"error"]),
-			       Vector(df_t[:,m]),
-			       marker = (:circle,5),
-			       xlabel = "Absolute Error",
-			       ylabel = y_labels[m],
-			       framestyle = :box,
-			       label = legend_names[t]);
+			    Vector(df_t[:,m]),
+			    marker = (:circle,5),
+			    xaxis = :log,
+			    yaxis = :log,
+			    xlabel = "Absolute Error",
+			    ylabel = y_labels[m],
+			    framestyle = :box,
+			    label = legend_names[t]);
 		println(df_t);
 
 	end
